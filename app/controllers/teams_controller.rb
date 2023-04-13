@@ -22,6 +22,13 @@ class TeamsController < ApplicationController
   end
 
   def destroy
+    new_team = Team.find(params[:new_team_id])
+    render json: { error: 'Must reasign team members to a new team' }, status: :unprocessable_entity if new_team.nil?
+
+    @team.members.each do |member|
+      member.update(team: new_team)
+    end
+
     @team.destroy
     head :no_content
   end
@@ -47,6 +54,6 @@ class TeamsController < ApplicationController
   end
 
   def team_params
-    params.require(:team).permit(:name)
+    params.permit(:name)
   end
 end

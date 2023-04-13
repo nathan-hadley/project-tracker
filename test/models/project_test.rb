@@ -1,7 +1,9 @@
-require "test_helper"
+require 'test_helper'
 
 class ProjectTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  test 'should not save without name' do
+    project = Project.new
+    assert_not project.save, 'Saved project without a name'
+  end
 end
+

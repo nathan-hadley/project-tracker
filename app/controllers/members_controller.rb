@@ -3,10 +3,10 @@
 # Endpoint to: Add a member to a project
 class MembersController < ApplicationController
   before_action :set_member, only: %i[update destroy show add_project projects]
-  before_action :set_team, only: %i[index create]
 
   def create
-    @member = @team.members.new(member_params)
+    team = Team.find(params[:team_id])
+    @member = team.members.new(member_params)
 
     if @member.save
       render json: @member, status: :created
@@ -29,7 +29,7 @@ class MembersController < ApplicationController
   end
 
   def index
-    @members = @team.members
+    @members = Member.all
     render json: @members
   end
 
@@ -49,11 +49,7 @@ class MembersController < ApplicationController
     @member = Member.find(params[:id])
   end
 
-  def set_team
-    @team = Team.find(params[:team_id])
-  end
-
   def member_params
-    params.require(:member).permit(:first_name, :last_name, :city, :state, :country, :team_id)
+    params.permit(:first_name, :last_name, :city, :state, :country, :team_id)
   end
 end
