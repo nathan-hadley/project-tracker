@@ -5,7 +5,9 @@ class MembersController < ApplicationController
   before_action :set_member, only: %i[update destroy show add_project projects]
 
   def create
-    team = Team.find(params[:team_id])
+    team = Team.find_by(id: params[:team_id])
+    return render json: { error: 'Team not found' }, status: :unprocessable_entity if team.nil?
+
     @member = team.members.new(member_params)
 
     if @member.save

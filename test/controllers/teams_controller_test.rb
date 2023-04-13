@@ -23,16 +23,36 @@ class TeamsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response 201
+
+    json_response = JSON.parse(@response.body)
+    assert_equal 'New Team', json_response['name']
+  end
+
+  test 'should not create team without a name' do
+    assert_no_difference('Team.count') do
+      post teams_url, as: :json
+    end
+
+    assert_response :unprocessable_entity
   end
 
   test 'should show team' do
     get team_url(@team), as: :json
     assert_response :success
+
+    json_response = JSON.parse(@response.body)
+    assert_equal @team.name, json_response['name']
   end
 
   test 'should update team' do
     patch team_url(@team), params: { name: 'Updated Team' }, as: :json
     assert_response 200
+
+    json_response = JSON.parse(@response.body)
+    assert_equal 'Updated Team', json_response['name']
+
+    @team.reload
+    assert_equal 'Updated Team', @team.name
   end
 
   test 'should destroy team' do
@@ -41,6 +61,8 @@ class TeamsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response 204
+
+    assert_nil Team.find_by(id: @team.id)
   end
 end
 
