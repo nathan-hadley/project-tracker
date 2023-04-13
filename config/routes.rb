@@ -1,6 +1,13 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  Rails.application.routes.draw do
+    resources :teams do
+      get :members, on: :member
 
-  # Defines the root path route ("/")
-  # root "articles#index"
+      resources :members, shallow: true do
+        post :add_project, on: :member
+      end
+    end
+
+    resources :projects
+  end
 end
