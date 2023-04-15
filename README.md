@@ -1,4 +1,4 @@
-# Team Tracker
+# Project Tracker
 
 Ruby on Rails app to keep track of members of different teams and their projects. This is a JSON API only.
 
